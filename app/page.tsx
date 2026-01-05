@@ -239,7 +239,7 @@ export default function HomePage() {
             </div>
             <div>
               <div className="social-proof-title">5000+ Mascotas Felices</div>
-              <div className="social-proof-subtitle">Confían en PETLY.STORE</div>
+              <div className="social-proof-subtitle">Confían en vetneds</div>
             </div>
           </div>
         </div>
