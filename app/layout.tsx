@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { AuthProvider } from "./lib/auth-context"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: "VETNEDS - Productos para Mascotas",
   description:

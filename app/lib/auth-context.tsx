@@ -21,9 +21,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null)
 
   useEffect(() => {
+    // Solo crear el cliente en el navegador
+    if (typeof window !== 'undefined') {
+      try {
+        setSupabase(createClient())
+      } catch (error) {
+        console.error('Error al crear cliente de Supabase:', error)
+        setLoading(false)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
       if (data.session?.user) {
@@ -52,6 +66,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase])
 
   const signUp = async (email: string, password: string, fullName: string) => {
+    if (!supabase) throw new Error('Supabase cliente no inicializado')
+    
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -79,6 +95,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) throw new Error('Supabase cliente no inicializado')
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -87,6 +105,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    if (!supabase) return
+    
     await supabase.auth.signOut()
     setUser(null)
     setUserRole(null)
